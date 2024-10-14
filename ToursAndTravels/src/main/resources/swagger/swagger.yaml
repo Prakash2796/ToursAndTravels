@@ -1,0 +1,271 @@
+openapi: 3.0.0
+info:
+  title: Tours and Travels API
+  description: |-
+    This API provides endpoints for managing tours, travel requests, car details, customer reviews, and popular destinations. It allows users to submit travel requests, provide car details, get contact information, submit customer reviews, and retrieve popular travel destinations.
+  version: 1.0.0
+  contact:
+    email: abc@abc.com
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: Travel Booking
+    description: Cab booking details
+  - name: Car Info
+    description: Cab info details
+  - name: Contact Us
+    description: Contact us details
+  - name: Customer Review
+    description: Cusromer Review details
+  - name: Destinations
+    description: Destination details
+paths:
+  /bookTravelNow:
+    post:
+      tags:
+        - Travel Booking
+      summary: Submit a travel booking request
+      operationId: bookTravelJourny
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookTravelFormRequest'
+      responses:
+        '200':
+          description: Travel request submitted successfully
+        '400':
+          description: Invalid input
+  /bookTravelNowByCarModel:
+    post:
+      tags:
+        - Travel Booking
+      summary: Submit car details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookTravelFormWithCarModelRequest'
+      responses:
+        '200':
+          description: Car details submitted successfully
+        '400':
+          description: Invalid input
+  /getPopularCarHireDetails:
+    get:
+      tags:
+        - Car Info
+      summary: Get popular destinations
+      responses:
+        '200':
+          description: Get popular destination details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PopularCarHireDetailsRequestResponseBody'
+  /getContactUsDetails:
+    get:
+      tags:
+        - Contact Us
+      summary: Get contact information
+      responses:
+        '200':
+          description: Contact information submitted successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactUsResponse'
+        '400':
+          description: Invalid input
+
+  /customerReview:
+    post:
+      tags:
+        - Customer Review
+      summary: Submit a customer review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomerReviewResponse'
+      responses:
+        '200':
+          description: Customer review submitted successfully
+        '400':
+          description: Invalid input
+
+  /popularDestinations:
+    get:
+      tags:
+        - Destinations
+      summary: Get popular destinations
+      responses:
+        '200':
+          description: List of popular destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PopularDestinationDetails'
+components:
+  schemas:
+    BookTravelFormRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Full name of the traveler
+        pickUp:
+          type: string
+          description: Pick-up location
+        drop:
+          type: string
+          description: Drop location
+        phone:
+          type: string
+          description: Phone number of the traveler
+        travelDate:
+          type: string
+          format: date
+          description: Date of travel
+        carModelType:
+          type: string
+          description: Type of car model requested
+      required:
+        - fullName
+        - pickUp
+        - drop
+        - phone
+        - travelDate
+        - carModelType
+    BookTravelFormWithCarModelRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Full name of the traveler
+        phone:
+          type: number
+          description: Phone number of the traveler
+        pickUpLocation:
+          type: string
+          description: Pick-up location
+        dropLocation:
+          type: string
+          description: Drop location
+        travelDate:
+          type: string
+          format: date
+          description: Date of travel
+        cabType:
+          type: string
+          description: Type of the car
+        cabName:
+          type: string
+          description: Name of the cab
+        noOfPassenger:
+          type: number
+          description: number of passenger
+      required:
+        - fullName
+        - pickUp
+        - drop
+        - phone
+        - travelDate
+        - cabType
+        - cabName
+    PopularCarHireDetails:
+      type: object
+      properties:
+        cabImageList:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: List of car images
+        cabType:
+          type: string
+          description: Type of cab e.g Hackback Cab
+        numberOfPassenger:
+          type: integer
+          description: Number of seats in the car
+        luggageSize:
+          type: number
+          description: Size of luggage space
+        transmission:
+          type: string
+        fuelType:
+          type: string
+        rating:
+          type: number
+          format: float
+          description: Rating of the car
+        reviewCount:
+          type: integer
+          description: Number of reviews
+        ratePerKilometer:
+          type: number
+          format: float
+          description: Cost per kilometer
+      required:
+        - carImageList
+        - carType
+        - numberOfSeats
+        - luggageSize
+        - rating
+        - reviewCount
+        - rsPerKilometer
+    ContactUsResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of Contact Person or location
+        contactNumber:
+          type: number
+          description: Contact number
+    CustomerReviewResponse:
+      type: object
+      properties:
+        customerName:
+          type: string
+          description: Name of the customer
+        profession:
+          type: string
+          description: Profession of the customer
+        reviewDetails:
+          type: string
+          description: Details of the review
+      required:
+        - customerName
+        - profession
+        - reviewDetails
+    PopularDestinationDetails:
+      type: object
+      properties:
+        destinationName:
+          type: string
+          description: Name of the destination
+        image:
+          type: string
+          format: uri
+          description: Image of the destination
+        mapAddress:
+          type: string
+          description: map location of booking office
+        contactUs:
+          type: object
+          properties:
+            address:
+              type: string
+              description: office address
